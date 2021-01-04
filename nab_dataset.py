@@ -27,19 +27,8 @@ class NabDataset(Dataset):
                        key = data_settings.key, 
                        BASE = data_settings.BASE)
         
-        # the hours and if it's night or day (7:00-22:00)
-        df_x['hours'] = df_x['timestamp'].dt.hour
-        df_x['daylight'] = ((df_x['hours'] >= 7) & (df_x['hours'] <= 22)).astype(int)
-        
-        # the day of the week (Monday=0, Sunday=6) and if it's a week end day or week day.
-        df_x['DayOfTheWeek'] = df_x['timestamp'].dt.dayofweek
-        df_x['WeekDay'] = (df_x['DayOfTheWeek'] < 5).astype(int)
-        
-        # the week of the year
-        df_x['Week'] = df_x['timestamp'].dt.week
-        
         #select and standardize data
-        df_x = pd.DataFrame(df_x[['value']])
+        df_x = df_x[['value']]
         df_x = self.normalize(df_x)
         df_x.columns = ['value']
         
@@ -82,8 +71,8 @@ class NabDataset(Dataset):
         
         idx = 0
         while(idx < len(data) - seq_len):
-            un_data.append(data.iloc[idx:idx+seq_len])
-            un_labels.append(labels.iloc[idx:idx+seq_len])
+            un_data.append(data.iloc[idx:idx+seq_len].values)
+            un_labels.append(labels.iloc[idx:idx+seq_len].values)
             idx += stride
         return np.array(un_data), np.array(un_labels)
     
@@ -113,3 +102,34 @@ class NabDataset(Dataset):
         np_scaled = min_max_scaler.fit_transform(df_x)
         df_x = pd.DataFrame(np_scaled)
         return df_x
+    
+    
+# settings for data loader
+class DataSettings:
+    
+    
+    
+    def __init__(self):
+        # location of datasets and category
+        end_name = 'cpu_utilization_asg_misconfiguration.csv' # dataset name
+        data_file = 'data\\realKnownCause\\'+end_name # dataset category and dataset name
+        key = 'realKnownCause/'+end_name # This key is used for reading anomaly labels
+        
+        self.BASE = 'D:\\ResearchDataGtx1060\\AnomalyDetectionData\\NabDataset\\'
+        self.label_file = 'labels\\combined_windows.json'
+        self.data_file = data_file
+        self.key = key
+        self.train = True
+        self.window_length = 60
+    
+    
+
+
+def main():
+    data_settings = DataSettings()
+    # define dataset object and data loader object for NAB dataset
+    dataset = NabDataset(data_settings=data_settings)
+    print(dataset.x.shape, dataset.y.shape) # check the dataset shape
+    
+if __name__=='__main__':
+    main()
