@@ -5,10 +5,11 @@
 ## Video Presentation: https://www.youtube.com/watch?v=m3wazsde_Vs
 
 ## Cite:
-@article{abul2020tanogan,
+@inproceedings{bashar2020tanogan,
   title={TAnoGAN: Time Series Anomaly Detection with Generative Adversarial Networks},
-  author={Abul Bashar, Md and Nayak, Richi},
-  journal={arXiv e-prints},
-  pages={arXiv--2008},
-  year={2020}
+  author={Bashar, Md Abul and Nayak, Richi},
+  booktitle={2020 IEEE Symposium Series on Computational Intelligence (SSCI)},
+  pages={1778--1785},
+  year={2020},
+  organization={IEEE}
 }
